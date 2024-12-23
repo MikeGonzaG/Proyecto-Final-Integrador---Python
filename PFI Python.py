@@ -6,25 +6,42 @@ juegos = [
         "Año de lanzamiento:": 2023,
         "Genero": "Shooter",
         "Plataformas": "PC",
-        "Numero de Jugadores": 10,
+        "Numero de Jugadores": 1400000,
         "Tiene Juego Online:": True
+    },
+    {
+        "id": 2,
+        "Nombre": "Valorant",
+        "Año de lanzamiento:": 2020,
+        "Genero": "Shooter",
+        "Plataformas": "PC",
+        "Numero de Jugadores": 16352647,
+        "Tiene Juego Online:": True
+    },
+    {
+        "id": 3,
+        "Nombre": "Flappy Bird",
+        "Año de lanzamiento:": 2013,
+        "Genero": "Arcade",
+        "Plataformas": "IOS, Android",
+        "Numero de Jugadores": 0,
+        "Tiene Juego Online:": False 
     }
 ]
 
-siguiente_id = 2  # El siguiente id debe ser 2 porque ya hay un juego con id 1
+siguiente_id = 4  # El siguiente id debe ser 4 porque ya hay un juego con id 3
 
 # FUNCIONES
 def cargar_juegos():
     global siguiente_id
     print("Cargando Datos...")
     
-    # Recolectando datos del juego
     nombre = input("ingrese el nombre del juego: ")
     año = int(input("ingrese el año de salida del juego: "))
     Genero = input("Ingrese el genero del juego EJ(Shooter, Estrategia, etc): ")
     Plataformas = input("ingrese la plataforma donde se juega EJ(PC, Xbox, PlayStation 5, ETC): ")
     Numero_de_Jugadores = int(input("ingrese la cantidad de jugadores: "))
-    Online = input("ingrese si puede jugar online (sí/no): ").strip().lower() == "sí"
+    Online = input("ingrese si puede jugar online (si/no): ").strip().lower() == "sí"
     
     # Crear un nuevo juego
     nuevo_juego = {
@@ -40,7 +57,6 @@ def cargar_juegos():
     # Incrementar el siguiente id
     siguiente_id += 1
 
-    # Agregar el nuevo juego a la lista de juegos
     juegos.append(nuevo_juego)
     print("El juego ha sido cargado exitosamente ")
 
@@ -51,10 +67,9 @@ def mostrar_juegos():
 
 def editar_numero_jugadores():
     print("Editando numero de jugadores...")
-    mostrar_juegos()  # Mostramos todos los juegos
+    mostrar_juegos()
     id_a_editar = int(input("Ingrese el ID del juego a editar: "))
 
-    # Validación de si el ID existe en los juegos
     juego_a_editar = None
     for juego in juegos:
         if juego["id"] == id_a_editar:
@@ -92,15 +107,38 @@ def eliminar_juego():
 
 def buscar_juego_por_nombre():
     print("Buscando juego por nombre...")
-    nombre_a_buscar = input("ingrese el nombre a buscar: ")
+    nombre_a_buscar = input("Ingrese el nombre a buscar: ").strip().lower()  # Convierte a minúsculas para hacer la búsqueda más flexible
+    juegos_encontrados = []
 
-    for id, juegos in juegos.items():
-        if nombre_a_buscar in juegos["nombre"]:
-            print(f"id: {juegos['id']} - Nombre del juego: {juegos['Nombre']} - Año de Lanzamiento: {juegos['Año de lanzamiento:']} - Genero: {juegos['Genero']} - Plataformas: {juegos['Plataformas']} - Numero de jugadores: {juegos['Numero de Jugadores']} Online: {juegos['Tiene Juego Online:']}")
-              
+    for juego in juegos:
+        if nombre_a_buscar in juego["Nombre"].lower():  # Usamos lower() para que la búsqueda no sea sensible a mayúsculas/minúsculas
+            juegos_encontrados.append(juego)
+
+    if len(juegos_encontrados) == 0:
+        print("No encontramos el juego")
+        return
+    
+    for juego in juegos_encontrados:
+        print(f"id: {juego['id']} - Nombre del juego: {juego['Nombre']} - Año de Lanzamiento: {juego['Año de lanzamiento:']} - Genero: {juego['Genero']} - Plataformas: {juego['Plataformas']} - Numero de jugadores: {juego['Numero de Jugadores']} Online: {juego['Tiene Juego Online:']}")
 
 def reporte_juegos_sin_jugadores():
-    print("reporte juegos sin jugadores...")
+    print("Reporte juegos sin jugadores...")
+    cantidad_juegos_sin_jugadores = int(input("Ingrese la cantidad de jugadores a partir de la cual se considera que el juego no tiene jugadores activos: "))
+    
+    juego_sin_jugadores = {}
+    
+    for juego in juegos:
+        if juego["Numero de Jugadores"] <= cantidad_juegos_sin_jugadores:
+            juego_sin_jugadores[juego["id"]] = juego
+
+    if len(juego_sin_jugadores) == 0:
+        print("El juego no tiene jugadores activos")
+        return
+
+    for id, juego in juego_sin_jugadores.items():
+        print(f"id: {juego['id']} - Nombre del juego: {juego['Nombre']} - Año de Lanzamiento: {juego['Año de lanzamiento:']} - Genero: {juego['Genero']} - Plataformas: {juego['Plataformas']} - Numero de jugadores: {juego['Numero de Jugadores']} Online: {juego['Tiene Juego Online:']}")
+
+
 
 def enter_para_continuar():
     input("Enter para continuar...")
@@ -112,7 +150,7 @@ while opcion != "0":
     # PRINT OPCIONES
     print("""
     BIENVENIDO A LA APP DE INVENTARIO PARA TUS VIDEOJUEGOS FAVORITOS, INGRESE UN NUMERO DEPENDE DE LA OPCION DESEADA:
-              1 - Cargar Juego 
+              1 - Cargar Juego
               2 - Mostrar Juego
               3 - Editar numero de jugadores en un juego
               4 - Eliminar Juego
